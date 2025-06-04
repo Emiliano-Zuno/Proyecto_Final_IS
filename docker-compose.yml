@@ -1,0 +1,27 @@
+services:
+
+  mysql:
+    image: mysql:8
+    container_name: mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: Root.1234
+      MYSQL_DATABASE: videojuegosDB
+      MYSQL_USER: userdb
+      MYSQL_PASSWORD: User.1234
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./midatos:/var/lib/mysql
+
+  videojuegos-api:
+    build: ./videojuegoapi
+    container_name: videojuegos-api
+    depends_on:
+      - mysql
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/videojuegosDB
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: Root.1234
+    ports:
+      - "8081:8080"
